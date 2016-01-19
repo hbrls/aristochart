@@ -73,6 +73,56 @@ var Aristochart = function(element, options, theme) {
   // Set the resolution
   this.resolution = window.devicePixelRatio || 1;
 
+  if ('development' === 'development') {
+    // ** Be explicit and make this lib as tiny as possible.
+    var that = this;
+
+    console.assert(
+      'x' in this.data &&
+      'tick' in this.data &&
+      'y' in this.data &&
+      Object.keys(this.data).every(function (key) {
+        return /(x|tick|y(\d*))/.test(key);
+      }),
+      "data should be like: {x, tick, y, y1, y2, ..., yn}");
+
+    console.assert(
+      Object.keys(this.data).every(function (key) {
+        if (key === 'x' || key === 'tick') {
+          return true;
+        } else {
+          return that.data[key].length === that.data.tick.length;
+        }
+      }),
+      'the number of ticks should only be determined by data.tick');
+
+    console.assert(
+      this.data.tick.length < 1000,
+      'not ready for huge data');
+
+    console.assert(
+      this.data.tick.every(function (t) {
+        return t === null || typeof t === 'string';
+      }),
+      'ticks should be null or \'\' or \'string\'');
+
+    console.assert(
+      Object.keys(this.data).every(function (key) {
+        if (key === 'x' || key === 'tick') {
+          return true;
+        } else {
+          return that.data[key].every(function (value) {
+            return typeof value === 'number';
+          });
+        }
+      }),
+      'y should be numbers');
+
+    console.assert(
+      typeof this.data.x === 'number' || Array.isArray(this.data.x) && this.data.x.length === 2,
+      'data.x should be like: {x: 10} or {x: [0, 10]}');
+  }
+
   //Update/initlize the graph variables
   this.update()
 
