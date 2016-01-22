@@ -32,7 +32,18 @@ Aristochart.line = {
 
   fill: function(style, points) {
     this.ctx.save();
-    this.ctx.fillStyle = style.line.fill;
+
+    if (style.line.fillGradient) {
+      var gradient = this.ctx.createLinearGradient((this.box.x + this.box.x1) / 2, this.box.y, (this.box.x * 2 + this.box.x1) / 3, this.box.y1);
+      gradient.addColorStop(0, style.line.fillGradient[0]);
+      gradient.addColorStop(0.2, style.line.fillGradient[1]);
+      gradient.addColorStop(0.75, style.line.fillGradient[2]);
+      gradient.addColorStop(1, style.line.fillGradient[3]);
+      this.ctx.fillStyle = gradient;
+    } else {
+      this.ctx.fillStyle = style.line.fill;
+    }
+
     this.ctx.beginPath();
     this.ctx.moveTo(points[0].rx, points[0].ry);
     var that = this;
@@ -41,55 +52,69 @@ Aristochart.line = {
     });
 
     //Find bounding box
-    this.ctx.lineTo(points[points.length - 1].rx, this.box.y + this.box.y1 + ((style.line.fillToBaseLine) ? this.options.padding : 0));
-    this.ctx.lineTo(points[0].rx, this.box.y + this.box.y1 + ((style.line.fillToBaseLine) ? this.options.padding : 0));
+    this.ctx.lineTo(points[points.length - 1].rx, this.box.y1 + ((style.line.fillToBaseLine) ? this.options.padding : 0));
+    this.ctx.lineTo(points[0].rx, this.box.y1 + ((style.line.fillToBaseLine) ? this.options.padding : 0));
     this.ctx.closePath();
     this.ctx.fill();
     this.ctx.restore();
-
   }
 };
 
 Aristochart.tick = {
-  line: function(style, x, y, type, i) {
+  line: function(style, x, y, type, i, tickType) {
     this.ctx.save();
     this.ctx.strokeStyle = style.tick.stroke;
     this.ctx.lineWidth = style.tick.width * this.resolution;
     this.ctx.beginPath();
 
-    var length = (i % 2 == 0) ? style.tick.major : style.tick.minor;
-      length *= this.resolution;
-
-    // Sort out the alignment
-    var mx = x, my = y;
-    switch(style.tick.align) {
-      case "middle":
-        if(type == "x") my = y - (length/2);
-        if(type == "y") mx = x - (length/2);
-      break;
-
-      case "inside":
-        if(type == "x") my = y - length;
-        mx = x;
-      break;
-
-      case "outside":
-        if(type == "x") my = y;
-        if(type == "y") mx = x - length;
-      break;
+    var length = 0;
+    if (tickType === 'major') {
+      length = style.tick.major;
+    } else if (tickType === 'minor') {
+      length = style.tick.minor;
     }
 
-    this.ctx.moveTo(mx, my)
+    if (length > 0) {
+      length *= this.resolution;
 
-    if(type == "x") this.ctx.lineTo(mx, my + length);
-    else this.ctx.lineTo(mx + length, my);
-    this.ctx.stroke();
-    this.ctx.restore();
+      // Sort out the alignment
+      var mx = x;
+      var my = y;
+      switch(style.tick.align) {
+        case "middle":
+          if(type == "x") my = y - (length/2);
+          if(type == "y") mx = x - (length/2);
+        break;
+
+        case "inside":
+          if(type == "x") my = y - length;
+          mx = x;
+        break;
+
+        case "outside":
+          if (type == "x") my = y;
+          if (type == "y") mx = x - length;
+          break;
+      }
+
+      // console.log(mx, my, length);
+      this.ctx.moveTo(mx, my);
+
+      if (type === 'x') {
+        // console.log(mx, my + length);
+        this.ctx.lineTo(mx, my + length);
+      } else if (type === 'y') {
+        this.ctx.lineTo(mx + length, my);
+      }
+      this.ctx.stroke();
+      this.ctx.restore();
+    }
   }
 };
 
 Aristochart.axis = {
   line: function(style, x, y, x1, y1, type) {
+    // console.log('axis: ', type, x, y, x1, y1);
     this.ctx.save();
     this.ctx.strokeStyle = style.axis.stroke;
     this.ctx.lineWidth = style.axis.width * this.resolution;
@@ -113,18 +138,27 @@ Aristochart.label = {
       this.ctx.textAlign = label.align;
       this.ctx.textBaseline = label.baseline;
 
-      var REG_TEXT = /^~(.*)/;
-      var REG_NUM = /(\-?\d+(\.\d)?)/;
+      // console.log(text);
 
-      var substr = '';
-      if (REG_TEXT.test(text)) {
-        substr = [text.substring(1)];
-      } else if (REG_NUM.test(text)) {
-        substr = REG_NUM.exec(text);
-      } else {
-        substr = [];
+      if (text) {
+        if (text[0] === '#') {
+          text = text.substring(1);
+        }
+        this.ctx.fillText(text, x, y);
       }
-      this.ctx.fillText(substr[0], x, y);
+
+      // var REG_TEXT = /^~(.*)/;
+      // var REG_NUM = /(\-?\d+(\.\d)?)/;
+
+      // var substr = '';
+      // if (REG_TEXT.test(text)) {
+      //   substr = [text.substring(1)];
+      // } else if (REG_NUM.test(text)) {
+      //   substr = REG_NUM.exec(text);
+      // } else {
+      //   substr = [];
+      // }
+      // this.ctx.fillText(substr[0], x, y);
     }
   }
 };
