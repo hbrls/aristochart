@@ -2,7 +2,7 @@
  * Render the graph and data
  * @return {null}
  */
-Aristochart.prototype.render = function() {
+H5C.prototype.render = function() {
   var that = this;
   var lines = this.lines;
   var origin = this.origin;
@@ -28,25 +28,25 @@ Aristochart.prototype.render = function() {
   var ox = origin.x;
   var oy = origin.y;
 
-  // debug {
-  this.ctx.save();
-  this.ctx.strokeStyle ='blue'
-  this.ctx.lineWidth = 4;
-  this.ctx.beginPath();
-  this.ctx.moveTo(140, 140);
-  this.ctx.lineTo(1140, 660);
-  this.ctx.stroke();
-  this.ctx.restore();
-
-  this.ctx.save();
-  this.ctx.strokeStyle ='green'
-  this.ctx.lineWidth = 4;
-  this.ctx.beginPath();
-  this.ctx.moveTo(0, 0);
-  this.ctx.lineTo(200, 200);
-  this.ctx.stroke();
-  this.ctx.restore();
-  // } debug
+  // // debug {
+  // this.ctx.save();
+  // this.ctx.strokeStyle ='blue'
+  // this.ctx.lineWidth = 4;
+  // this.ctx.beginPath();
+  // this.ctx.moveTo(140, 140);
+  // this.ctx.lineTo(1140, 660);
+  // this.ctx.stroke();
+  // this.ctx.restore();
+  //
+  // this.ctx.save();
+  // this.ctx.strokeStyle ='green'
+  // this.ctx.lineWidth = 4;
+  // this.ctx.beginPath();
+  // this.ctx.moveTo(0, 0);
+  // this.ctx.lineTo(200, 200);
+  // this.ctx.stroke();
+  // this.ctx.restore();
+  // // } debug
 
   // console.log(box);
 

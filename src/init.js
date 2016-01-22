@@ -1,4 +1,4 @@
-Aristochart.prototype.initBox = function () {
+H5C.prototype.initBox = function () {
   this.box = {
     x: this.options.margin,
     y: this.options.margin,
@@ -10,7 +10,7 @@ Aristochart.prototype.initBox = function () {
 /**
  * Calculate x: {min, max, range}, y: {min, max, range}
  */
-Aristochart.prototype.initRange = function() {
+H5C.prototype.initRange = function() {
   // ** Since you can have multiple Y lines, we have to iterate through and get the absolute max and min.
   var data = this.data;
   var values = [];
@@ -52,7 +52,7 @@ Aristochart.prototype.initRange = function() {
 /**
  * Update the axis dimensions
  */
-Aristochart.prototype.initAxis = function () {
+H5C.prototype.initAxis = function () {
   var padding = this.options.padding;
   var box = this.box;
 
@@ -80,7 +80,7 @@ Aristochart.prototype.initAxis = function () {
  * @param  {Function} callback (optional) Run a function over a point.
  * @return {Object}   The lines store <name> : <point array> where a point is {rx (raster x), ry, x (actual x point), y}
  */
-Aristochart.prototype.initPoints = function() {
+H5C.prototype.initPoints = function() {
   // ** Caching these variables in case of large datasets
   var lines = {};
   var Xmax = this.x.max;
@@ -136,10 +136,10 @@ Aristochart.prototype.initPoints = function() {
 
 
 /**
- * Updates Aristochart's variables such as maxes and mins of the graphs
+ * Updates H5C's variables such as maxes and mins of the graphs
  * @return {null}
  */
-Aristochart.prototype.update = function() {
+H5C.prototype.update = function() {
   // Apply the resolution to all the dimensions
   var resolution = this.resolution;
   this.options.margin *= resolution;

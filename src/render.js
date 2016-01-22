@@ -1,7 +1,7 @@
 /**
- * Aristochart's default render functions
+ * H5C's default render functions
  */
-Aristochart.point = {
+H5C.point = {
   circle: function(style, rx, ry, x, y, graph) {
     this.ctx.save();
     this.ctx.strokeStyle = style.point.stroke;
@@ -15,7 +15,7 @@ Aristochart.point = {
   }
 };
 
-Aristochart.line = {
+H5C.line = {
   line: function(style, points) {
     this.ctx.save();
     this.ctx.strokeStyle = style.line.stroke;
@@ -60,7 +60,7 @@ Aristochart.line = {
   }
 };
 
-Aristochart.tick = {
+H5C.tick = {
   line: function(style, x, y, type, i, tickType) {
     this.ctx.save();
     this.ctx.strokeStyle = style.tick.stroke;
@@ -112,7 +112,7 @@ Aristochart.tick = {
   }
 };
 
-Aristochart.axis = {
+H5C.axis = {
   line: function(style, x, y, x1, y1, type) {
     // console.log('axis: ', type, x, y, x1, y1);
     this.ctx.save();
@@ -126,7 +126,7 @@ Aristochart.axis = {
   }
 };
 
-Aristochart.label = {
+H5C.label = {
   text: function(style, text, x, y, type, i) {
     if(i % this.options.label[type].step == 0) {
       var label = style.label[type];
@@ -163,7 +163,7 @@ Aristochart.label = {
   }
 };
 
-Aristochart.title = {
+H5C.title = {
   text: function(style, text, x, y, type) {
     this.ctx.save();
 

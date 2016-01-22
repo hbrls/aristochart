@@ -12,11 +12,11 @@ gulp.task('build', function () {
     themes = argv.themes.split(',');
   }
 
-  var outputDev = 'aristochart.js';
-  var outputProd = 'aristochart.min.js';
+  var outputDev = 'h5c.js';
+  var outputProd = 'h5c.min.js';
   if (themes.length > 1 || themes[0] !== 'default') {
-    outputDev = 'aristochart-' + themes.join('-') + '.js';
-    outputProd = 'aristochart-' + themes.join('-') + '.min.js';
+    outputDev = 'h5c-' + themes.join('-') + '.js';
+    outputProd = 'h5c-' + themes.join('-') + '.min.js';
   }
 
   var files = [
@@ -27,9 +27,6 @@ gulp.task('build', function () {
   ];
   if (argv.toImage) {
     files.push('./src/to-image-plugin.js');
-  }
-  if (argv.jquery) {
-    files.push('./src/jquery-plugin.js');
   }
   themes.forEach(function (t) {
     files.push('./themes/' + t + '/' + t + '.js');

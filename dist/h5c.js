@@ -1,11 +1,11 @@
 /**
- * Aristochart's constructor.
+ * H5C's constructor.
  *
  * @param {Object} element The DOM element container or canvas to use
  * @param {Object} options See Options.
- * @param {Object} theme A theme object. See Aristochart.themes.
+ * @param {Object} theme A theme object. See H5C.themes.
  */
-var Aristochart = function(element, options, theme) {
+var H5C = function(element, options, theme) {
   // Sort out the default parameters
   if(!element || !element.DOCUMENT_NODE) options = element, element = document.createElement("canvas");
 
@@ -17,7 +17,7 @@ var Aristochart = function(element, options, theme) {
   if(options.width && !options.height) options.height = Math.floor(options.width * 0.67);
 
   //Set the defaults
-  this.defaults = Aristochart.themes.default;
+  this.defaults = H5C.themes.default;
 
   // Bind the parameters to the instance
   this.options = options;
@@ -26,21 +26,21 @@ var Aristochart = function(element, options, theme) {
   this.data = this.options.data;
 
   // Merge the theme with the options.
-  if(this.theme) this.defaults = Aristochart._deepMerge(this.defaults, this.theme);
+  if(this.theme) this.defaults = H5C._deepMerge(this.defaults, this.theme);
 
   // Merge the options with the defaults
-  for(var key in this.defaults) this.options = Aristochart._deepMerge(this.defaults, this.options);
+  for(var key in this.defaults) this.options = H5C._deepMerge(this.defaults, this.options);
 
   // Merge all the styles with the default style
   for(var style in this.options.style)
     for(var key in this.options.style["default"])
-      this.options.style[style] = Aristochart._deepMerge(this.options.style["default"], this.options.style[style]);
+      this.options.style[style] = H5C._deepMerge(this.options.style["default"], this.options.style[style]);
 
   // Sort out indexes
   this.indexes = [], that = this;
   ["fill", "axis", "tick", "line", "point", "label", "title"].forEach(function(feature) {
     //Set the feature in the array at it's index
-    if(that.indexes[that.options[feature].index]) throw new Error("Conflicting indexes in Aristochart");
+    if(that.indexes[that.options[feature].index]) throw new Error("Conflicting indexes in H5C");
     else that.indexes[that.options[feature].index] = feature;
   });
 
@@ -139,7 +139,7 @@ var Aristochart = function(element, options, theme) {
  * @param  {Object} b The recipient of the merge or the object to be merged into
  * @return {object}   The merged objects
  */
-Aristochart._deepMerge = function(defaults, options) {
+H5C._deepMerge = function(defaults, options) {
   // Used "defaults" and "options" to help with the concept in my head
   return (function recur(defaults, options) {
     for(var key in defaults) {
@@ -156,7 +156,7 @@ Aristochart._deepMerge = function(defaults, options) {
  * Translate the human readable (x, y) to its canvas position.
  * @return [canvasX, canvasY]
  */
-Aristochart.prototype._normalize = function (x, y) {
+H5C.prototype._normalize = function (x, y) {
   var canvasX = null;
   var canvasY = null;
 
@@ -172,12 +172,12 @@ Aristochart.prototype._normalize = function (x, y) {
 };
 
 /**
- * Aristochart theme object
+ * H5C theme object
  * @type {Object}
  */
-Aristochart.themes = {};
+H5C.themes = {};
 
-Aristochart.prototype.initBox = function () {
+H5C.prototype.initBox = function () {
   this.box = {
     x: this.options.margin,
     y: this.options.margin,
@@ -189,7 +189,7 @@ Aristochart.prototype.initBox = function () {
 /**
  * Calculate x: {min, max, range}, y: {min, max, range}
  */
-Aristochart.prototype.initRange = function() {
+H5C.prototype.initRange = function() {
   // ** Since you can have multiple Y lines, we have to iterate through and get the absolute max and min.
   var data = this.data;
   var values = [];
@@ -231,7 +231,7 @@ Aristochart.prototype.initRange = function() {
 /**
  * Update the axis dimensions
  */
-Aristochart.prototype.initAxis = function () {
+H5C.prototype.initAxis = function () {
   var padding = this.options.padding;
   var box = this.box;
 
@@ -259,7 +259,7 @@ Aristochart.prototype.initAxis = function () {
  * @param  {Function} callback (optional) Run a function over a point.
  * @return {Object}   The lines store <name> : <point array> where a point is {rx (raster x), ry, x (actual x point), y}
  */
-Aristochart.prototype.initPoints = function() {
+H5C.prototype.initPoints = function() {
   // ** Caching these variables in case of large datasets
   var lines = {};
   var Xmax = this.x.max;
@@ -315,10 +315,10 @@ Aristochart.prototype.initPoints = function() {
 
 
 /**
- * Updates Aristochart's variables such as maxes and mins of the graphs
+ * Updates H5C's variables such as maxes and mins of the graphs
  * @return {null}
  */
-Aristochart.prototype.update = function() {
+H5C.prototype.update = function() {
   // Apply the resolution to all the dimensions
   var resolution = this.resolution;
   this.options.margin *= resolution;
@@ -336,7 +336,7 @@ Aristochart.prototype.update = function() {
  * Render the graph and data
  * @return {null}
  */
-Aristochart.prototype.render = function() {
+H5C.prototype.render = function() {
   var that = this;
   var lines = this.lines;
   var origin = this.origin;
@@ -362,25 +362,25 @@ Aristochart.prototype.render = function() {
   var ox = origin.x;
   var oy = origin.y;
 
-  // debug {
-  this.ctx.save();
-  this.ctx.strokeStyle ='blue'
-  this.ctx.lineWidth = 4;
-  this.ctx.beginPath();
-  this.ctx.moveTo(140, 140);
-  this.ctx.lineTo(1140, 660);
-  this.ctx.stroke();
-  this.ctx.restore();
-
-  this.ctx.save();
-  this.ctx.strokeStyle ='green'
-  this.ctx.lineWidth = 4;
-  this.ctx.beginPath();
-  this.ctx.moveTo(0, 0);
-  this.ctx.lineTo(200, 200);
-  this.ctx.stroke();
-  this.ctx.restore();
-  // } debug
+  // // debug {
+  // this.ctx.save();
+  // this.ctx.strokeStyle ='blue'
+  // this.ctx.lineWidth = 4;
+  // this.ctx.beginPath();
+  // this.ctx.moveTo(140, 140);
+  // this.ctx.lineTo(1140, 660);
+  // this.ctx.stroke();
+  // this.ctx.restore();
+  //
+  // this.ctx.save();
+  // this.ctx.strokeStyle ='green'
+  // this.ctx.lineWidth = 4;
+  // this.ctx.beginPath();
+  // this.ctx.moveTo(0, 0);
+  // this.ctx.lineTo(200, 200);
+  // this.ctx.stroke();
+  // this.ctx.restore();
+  // // } debug
 
   // console.log(box);
 
@@ -531,9 +531,9 @@ Aristochart.prototype.render = function() {
 };
 
 /**
- * Aristochart's default render functions
+ * H5C's default render functions
  */
-Aristochart.point = {
+H5C.point = {
   circle: function(style, rx, ry, x, y, graph) {
     this.ctx.save();
     this.ctx.strokeStyle = style.point.stroke;
@@ -547,7 +547,7 @@ Aristochart.point = {
   }
 };
 
-Aristochart.line = {
+H5C.line = {
   line: function(style, points) {
     this.ctx.save();
     this.ctx.strokeStyle = style.line.stroke;
@@ -592,7 +592,7 @@ Aristochart.line = {
   }
 };
 
-Aristochart.tick = {
+H5C.tick = {
   line: function(style, x, y, type, i, tickType) {
     this.ctx.save();
     this.ctx.strokeStyle = style.tick.stroke;
@@ -644,7 +644,7 @@ Aristochart.tick = {
   }
 };
 
-Aristochart.axis = {
+H5C.axis = {
   line: function(style, x, y, x1, y1, type) {
     // console.log('axis: ', type, x, y, x1, y1);
     this.ctx.save();
@@ -658,7 +658,7 @@ Aristochart.axis = {
   }
 };
 
-Aristochart.label = {
+H5C.label = {
   text: function(style, text, x, y, type, i) {
     if(i % this.options.label[type].step == 0) {
       var label = style.label[type];
@@ -695,7 +695,7 @@ Aristochart.label = {
   }
 };
 
-Aristochart.title = {
+H5C.title = {
   text: function(style, text, x, y, type) {
     this.ctx.save();
 
@@ -716,170 +716,170 @@ Aristochart.title = {
 }
 
 /**
- * @theme Modern
- * @author hbrls <shuaizhexu@gmail.com> (http://lisite.de)
- * @license MIT
+ * @theme Default
+ * @author Adrian Cooney <cooney.adrian@gmail.com> (http://adriancooney.ie)
+ * @license http://opensource.org/licenses/MIT
  */
 
-Aristochart.themes.modern = {
-  width: 640,
-  height: 400,
-  margin: 70,
-  padding: 0,
-  render: true,
+//Given as an example. This is already included in H5C.js
+H5C.themes.default = {
+	width: 640,
+	height: 400,
+	margin: 70,
+	padding: 20,
+	render: true, //Automatically render
 
-  fill: {
-    index: 0,
-    render: Aristochart.line.fill,
-    fillToBaseLine: true,
-  },
+	fill: {
+		index: 0,
+		render: H5C.line.fill,
+		fillToBaseLine: true,
+	},
 
-  axis: {
-    index: 1,
-    render: Aristochart.axis.line,
+	axis: {
+		index: 1,
+		render: H5C.axis.line,
 
-    x: {
-      steps: 5,
-      render: Aristochart.axis.line,
-    },
+		x: {
+			steps: 5,
+			render: H5C.axis.line,
+		},
 
-    y: {
-      steps: 5,
-      render: Aristochart.axis.line,
-    }
-  },
+		y: {
+			steps: 10,
+			render: H5C.axis.line,
+		}
+	},
 
-  tick: {
-    index: 2,
-    render: Aristochart.tick.line
-  },
+	tick: {
+		index: 2,
+		render: H5C.tick.line
+	},
 
-  line: {
-    index: 3,
-    render: Aristochart.line.line
-  },
+	line: {
+		index: 3,
+		render: H5C.line.line
+	},
 
-  point: {
-    index: 4,
-    render: Aristochart.point.circle
-  },
+	point: {
+		index: 4,
+		render: H5C.point.circle
+	},
 
-  label: {
-    index: 5,
-    render: Aristochart.label.text,
-    x: {
-      step: 1
-    },
-    y: {
-      step: 1
-    }
-  },
+	label: {
+		index: 5,
+		render: H5C.label.text,
+		x: {
+			step: 1
+		},
+		y: {
+			step: 1
+		}
+	},
 
-  title: {
-    index: 6,
-    render: Aristochart.title.text,
-    x: 'x',
-    y: 'y',
-  },
+	title: {
+		index: 6,
+		render: H5C.title.text,
+		x: "x",
+		y: "y"
+	},
 
-  style: {
-    default: {
-      point: {
-        visible: false
-      },
+	style: {
+		default: {
+			point: {
+				stroke: "#000",
+				fill: "#fff",
+				radius: 4,
+				width: 3,
+				visible: true
+			},
 
-      line: {
-        stroke: '#e64742',
-        width: 2,
-        fillGradient: [
-          'rgba(246, 168, 168, 1)',
-          'rgba(246, 168, 168, 0.9)',
-          'rgba(246, 168, 168, 0.1)',
-          'rgba(246, 168, 168, 0)',
-        ],
-        visible: true
-      },
+			line: {
+				stroke: "#298281",
+				width: 3,
+				fill: "rgba(150, 215, 226, 0.4)",
+				visible: true
+			},
 
-      axis: {
-        stroke: '#ccc',
-        width: 1,
-        visible: true,
+			axis: {
+				stroke: "#ddd",
+				width: 3,
+				visible: true,
 
-        x: {
-          visible: true,
-          fixed: true
-        },
+				x: {
+					visible: true,
+					fixed: true
+				},
 
-        y: {
-          visible: true,
-          fixed: true
-        }
-      },
+				y: {
+					visible: true,
+					fixed: true
+				}
+			},
 
-      tick: {
-        align: 'outside',
-        stroke: '#ccc',
-        width: 1,
-        minor: 4,
-        major: 8,
-        visible: true,
+			tick: {
+				align: "middle", //"outside", "inside",
+				stroke: "#ddd",
+				width: 2,
+				minor: 10,
+				major: 15,
+				visible: true,
 
-        x: {
-          fixed: true
-        },
+				x: {
+					fixed: true
+				},
 
-        y: {
-          fixed: true
-        }
-      },
+				y: {
+					fixed: true
+				}
+			},
 
-      label: {
-        x: {
-          font: 'Helvetica',
-          fontSize: 12,
-          fontStyle: 'normal',
-          color: '#7f7f7f',
-          align: 'center',
-          baseline: 'bottom',
-          offsetY: 20,
-          offsetX: 3,
-          visible: true,
-          fixed: true
-        },
+			label: {
+				x: {
+					font: "Helvetica",
+					fontSize: 14,
+					fontStyle: "normal",
+					color: "#000",
+					align: "center",
+					baseline: "bottom",
+					offsetY: 8,
+					offsetX: 3,
+					visible: true,
+					fixed: true
+				},
 
-        y: {
-          font: 'Helvetica',
-          fontSize: 12,
-          fontStyle: 'normal',
-          color: '#7f7f7f',
-          align: 'center',
-          baseline: 'bottom',
-          offsetY: 8,
-          offsetX: 12,
-          visible: true,
-          fixed: true
-        }
-      },
+				y: {
+					font: "Helvetica",
+					fontSize: 10,
+					fontStyle: "normal",
+					color: "#000",
+					align: "center",
+					baseline: "bottom",
+					offsetY: 8,
+					offsetX: 8,
+					visible: true,
+					fixed: true
+				}
+			},
 
-      title: {
-        color: '#777',
-        font: 'georgia',
-        fontSize: '16',
-        fontStyle: 'italic',
-        visible: false,
+			title: {
+				color: "#777",
+				font: "georgia",
+				fontSize: "16",
+				fontStyle: "italic",
+				visible: true,
 
-        x: {
-          offsetX: 0,
-          offsetY: 120,
-          visible: true
-        },
+				x: {
+					offsetX: 0,
+					offsetY: 120,
+					visible: true
+				},
 
-        y: {
-          offsetX: -135,
-          offsetY: 10,
-          visible: true
-        }
-      }
-    }
-  }
+				y: {
+					offsetX: -135,
+					offsetY: 10,
+					visible: true
+				}
+			}
+		}
+	}
 };

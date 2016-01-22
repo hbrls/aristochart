@@ -4,7 +4,7 @@
  * @license MIT
  */
 
-Aristochart.themes.modern = {
+H5C.themes.modern = {
   width: 640,
   height: 400,
   margin: 70,
@@ -13,43 +13,43 @@ Aristochart.themes.modern = {
 
   fill: {
     index: 0,
-    render: Aristochart.line.fill,
+    render: H5C.line.fill,
     fillToBaseLine: true,
   },
 
   axis: {
     index: 1,
-    render: Aristochart.axis.line,
+    render: H5C.axis.line,
 
     x: {
       steps: 5,
-      render: Aristochart.axis.line,
+      render: H5C.axis.line,
     },
 
     y: {
       steps: 5,
-      render: Aristochart.axis.line,
+      render: H5C.axis.line,
     }
   },
 
   tick: {
     index: 2,
-    render: Aristochart.tick.line
+    render: H5C.tick.line
   },
 
   line: {
     index: 3,
-    render: Aristochart.line.line
+    render: H5C.line.line
   },
 
   point: {
     index: 4,
-    render: Aristochart.point.circle
+    render: H5C.point.circle
   },
 
   label: {
     index: 5,
-    render: Aristochart.label.text,
+    render: H5C.label.text,
     x: {
       step: 1
     },
@@ -60,7 +60,7 @@ Aristochart.themes.modern = {
 
   title: {
     index: 6,
-    render: Aristochart.title.text,
+    render: H5C.title.text,
     x: 'x',
     y: 'y',
   },

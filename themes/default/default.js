@@ -4,8 +4,8 @@
  * @license http://opensource.org/licenses/MIT
  */
 
-//Given as an example. This is already included in Aristochart.js
-Aristochart.themes.default = {
+//Given as an example. This is already included in H5C.js
+H5C.themes.default = {
 	width: 640,
 	height: 400,
 	margin: 70,
@@ -14,43 +14,43 @@ Aristochart.themes.default = {
 
 	fill: {
 		index: 0,
-		render: Aristochart.line.fill,
+		render: H5C.line.fill,
 		fillToBaseLine: true,
 	},
 
 	axis: {
 		index: 1,
-		render: Aristochart.axis.line,
+		render: H5C.axis.line,
 
 		x: {
 			steps: 5,
-			render: Aristochart.axis.line,
+			render: H5C.axis.line,
 		},
 
 		y: {
 			steps: 10,
-			render: Aristochart.axis.line,
+			render: H5C.axis.line,
 		}
 	},
 
 	tick: {
 		index: 2,
-		render: Aristochart.tick.line
+		render: H5C.tick.line
 	},
 
 	line: {
 		index: 3,
-		render: Aristochart.line.line
+		render: H5C.line.line
 	},
 
 	point: {
 		index: 4,
-		render: Aristochart.point.circle
+		render: H5C.point.circle
 	},
 
 	label: {
 		index: 5,
-		render: Aristochart.label.text,
+		render: H5C.label.text,
 		x: {
 			step: 1
 		},
@@ -61,7 +61,7 @@ Aristochart.themes.default = {
 
 	title: {
 		index: 6,
-		render: Aristochart.title.text,
+		render: H5C.title.text,
 		x: "x",
 		y: "y"
 	},
@@ -112,7 +112,7 @@ Aristochart.themes.default = {
 				},
 
 				y: {
-					fixed: true	
+					fixed: true
 				}
 			},
 

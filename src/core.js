@@ -1,11 +1,11 @@
 /**
- * Aristochart's constructor.
+ * H5C's constructor.
  *
  * @param {Object} element The DOM element container or canvas to use
  * @param {Object} options See Options.
- * @param {Object} theme A theme object. See Aristochart.themes.
+ * @param {Object} theme A theme object. See H5C.themes.
  */
-var Aristochart = function(element, options, theme) {
+var H5C = function(element, options, theme) {
   // Sort out the default parameters
   if(!element || !element.DOCUMENT_NODE) options = element, element = document.createElement("canvas");
 
@@ -17,7 +17,7 @@ var Aristochart = function(element, options, theme) {
   if(options.width && !options.height) options.height = Math.floor(options.width * 0.67);
 
   //Set the defaults
-  this.defaults = Aristochart.themes.default;
+  this.defaults = H5C.themes.default;
 
   // Bind the parameters to the instance
   this.options = options;
@@ -26,21 +26,21 @@ var Aristochart = function(element, options, theme) {
   this.data = this.options.data;
 
   // Merge the theme with the options.
-  if(this.theme) this.defaults = Aristochart._deepMerge(this.defaults, this.theme);
+  if(this.theme) this.defaults = H5C._deepMerge(this.defaults, this.theme);
 
   // Merge the options with the defaults
-  for(var key in this.defaults) this.options = Aristochart._deepMerge(this.defaults, this.options);
+  for(var key in this.defaults) this.options = H5C._deepMerge(this.defaults, this.options);
 
   // Merge all the styles with the default style
   for(var style in this.options.style)
     for(var key in this.options.style["default"])
-      this.options.style[style] = Aristochart._deepMerge(this.options.style["default"], this.options.style[style]);
+      this.options.style[style] = H5C._deepMerge(this.options.style["default"], this.options.style[style]);
 
   // Sort out indexes
   this.indexes = [], that = this;
   ["fill", "axis", "tick", "line", "point", "label", "title"].forEach(function(feature) {
     //Set the feature in the array at it's index
-    if(that.indexes[that.options[feature].index]) throw new Error("Conflicting indexes in Aristochart");
+    if(that.indexes[that.options[feature].index]) throw new Error("Conflicting indexes in H5C");
     else that.indexes[that.options[feature].index] = feature;
   });
 
@@ -139,7 +139,7 @@ var Aristochart = function(element, options, theme) {
  * @param  {Object} b The recipient of the merge or the object to be merged into
  * @return {object}   The merged objects
  */
-Aristochart._deepMerge = function(defaults, options) {
+H5C._deepMerge = function(defaults, options) {
   // Used "defaults" and "options" to help with the concept in my head
   return (function recur(defaults, options) {
     for(var key in defaults) {
@@ -156,7 +156,7 @@ Aristochart._deepMerge = function(defaults, options) {
  * Translate the human readable (x, y) to its canvas position.
  * @return [canvasX, canvasY]
  */
-Aristochart.prototype._normalize = function (x, y) {
+H5C.prototype._normalize = function (x, y) {
   var canvasX = null;
   var canvasY = null;
 
@@ -172,7 +172,7 @@ Aristochart.prototype._normalize = function (x, y) {
 };
 
 /**
- * Aristochart theme object
+ * H5C theme object
  * @type {Object}
  */
-Aristochart.themes = {};
+H5C.themes = {};
