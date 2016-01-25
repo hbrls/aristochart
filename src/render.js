@@ -34,10 +34,11 @@ H5C.line = {
     this.ctx.save();
 
     if (style.line.fillGradient) {
-      var gradient = this.ctx.createLinearGradient((this.box.x + this.box.x1) / 2, this.box.y, (this.box.x * 2 + this.box.x1) / 3, this.box.y1);
+      // var gradient = this.ctx.createLinearGradient((this.box.x + this.box.x1) / 2, this.box.y, (this.box.x * 2 + this.box.x1) / 3, this.box.y1);
+      var gradient = this.ctx.createLinearGradient((this.box.x + this.box.x1) / 2, this.box.y, (this.box.x + this.box.x1) / 2, this.box.y1);
       gradient.addColorStop(0, style.line.fillGradient[0]);
-      gradient.addColorStop(0.2, style.line.fillGradient[1]);
-      gradient.addColorStop(0.75, style.line.fillGradient[2]);
+      gradient.addColorStop(0.5, style.line.fillGradient[1]);
+      gradient.addColorStop(0.9, style.line.fillGradient[2]);
       gradient.addColorStop(1, style.line.fillGradient[3]);
       this.ctx.fillStyle = gradient;
     } else {
@@ -140,10 +141,16 @@ H5C.label = {
 
       // console.log(text);
 
-      if (text) {
-        if (text[0] === '#') {
-          text = text.substring(1);
+      if (type === 'x') {
+        if (text) {
+          if (text[0] === '#') {
+            text = text.substring(1);
+          }
+          this.ctx.fillText(text, x, y);
         }
+      } else if (type === 'y') {
+        text = text.toFixed(style.label.y.precision || 2);
+        text += style.label.y.suffix || '';
         this.ctx.fillText(text, x, y);
       }
 
@@ -165,18 +172,23 @@ H5C.label = {
 
 H5C.title = {
   text: function(style, text, x, y, type) {
+    // console.log('render.text:', style, text, x, y, type);
     this.ctx.save();
 
     if(type == "x") y += style.title.x.offsetY,
       x += style.title.x.offsetX;
-    if(type == "y") y += style.title.y.offsetY,
+
+    if (type === "y") {
+      y += style.title.y.offsetY;
       x += style.title.y.offsetX;
+    }
 
     this.ctx.font = style.title.fontStyle + " " + (style.title.fontSize*this.resolution) + "px " + style.title.font;
     this.ctx.fillStyle = style.title.color;
 
     this.ctx.translate(x, y);
-    if(type == "y") this.ctx.rotate(Math.PI/2);
+    // this.ctx.translate(300, 300);
+    // if(type == "y") this.ctx.rotate(Math.PI/2);
 
     this.ctx.fillText(text, 0, 0);
     this.ctx.restore();

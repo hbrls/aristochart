@@ -42,8 +42,17 @@ H5C.prototype.render = function() {
   // this.ctx.strokeStyle ='green'
   // this.ctx.lineWidth = 4;
   // this.ctx.beginPath();
-  // this.ctx.moveTo(0, 0);
-  // this.ctx.lineTo(200, 200);
+  // this.ctx.moveTo(this.box.x, this.box.y);
+  // this.ctx.lineTo(this.box.x + 200, this.box.y + 200);
+  // this.ctx.stroke();
+  // this.ctx.restore();
+  //
+  // this.ctx.save();
+  // this.ctx.strokeStyle ='green'
+  // this.ctx.lineWidth = 4;
+  // this.ctx.beginPath();
+  // this.ctx.moveTo(this.box.x1, this.box.y1);
+  // this.ctx.lineTo(this.box.x1 - 200, this.box.y1 - 200);
   // this.ctx.stroke();
   // this.ctx.restore();
   // // } debug
@@ -176,16 +185,28 @@ H5C.prototype.render = function() {
           var xLabel = that.options.title.x;
           var yLabel = that.options.title.y;
 
-          if (defaults.title.x.visible) {
+          var canvasXY = that._normalize(0, that.box.y1 - that.box.y);
+
+          // FIXME
+          // if (defaults.title.x.visible) {
+          //   that.options.title.render.call(
+          //     that,
+          //     defaults,
+          //     xLabel,
+          //     (that.box.x*2 + that.box.x1)/2,
+          //     that.box.y + that.box.y1,
+          //     'x');
+          // }
+
+          if (defaults.title.y.visible) {
             that.options.title.render.call(
               that,
               defaults,
-              xLabel,
-              (that.box.x*2 + that.box.x1)/2,
-              that.box.y + that.box.y1,
-              "x");
+              yLabel,
+              canvasXY[0],
+              canvasXY[1],
+              'y');
           }
-          if(defaults.title.y.visible) that.options.title.render.call(that, defaults, yLabel, (that.box.x), (that.box.y*2 + that.box.y1)/2, "y");
         }
         break;
 

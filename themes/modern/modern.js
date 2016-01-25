@@ -7,7 +7,6 @@
 H5C.themes.modern = {
   width: 640,
   height: 400,
-  margin: 70,
   padding: 0,
   render: true,
 
@@ -75,8 +74,8 @@ H5C.themes.modern = {
         stroke: '#e64742',
         width: 2,
         fillGradient: [
-          'rgba(246, 168, 168, 1)',
           'rgba(246, 168, 168, 0.9)',
+          'rgba(246, 168, 168, 0.4)',
           'rgba(246, 168, 168, 0.1)',
           'rgba(246, 168, 168, 0)',
         ],
@@ -95,8 +94,9 @@ H5C.themes.modern = {
 
         y: {
           visible: true,
-          fixed: true
-        }
+          fixed: true,
+          suffix: null,
+        },
       },
 
       tick: {
@@ -140,7 +140,9 @@ H5C.themes.modern = {
           offsetY: 8,
           offsetX: 12,
           visible: true,
-          fixed: true
+          fixed: true,
+          precision: 2,
+          suffix: null,
         }
       },
 
@@ -148,13 +150,13 @@ H5C.themes.modern = {
         color: '#777',
         font: 'georgia',
         fontSize: '16',
-        fontStyle: 'italic',
-        visible: false,
+        fontStyle: 'normal',
+        visible: true,
 
         x: {
           offsetX: 0,
           offsetY: 120,
-          visible: true
+          visible: false
         },
 
         y: {

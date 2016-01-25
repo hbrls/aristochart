@@ -1,9 +1,9 @@
 H5C.prototype.initBox = function () {
   this.box = {
-    x: this.options.margin,
-    y: this.options.margin,
-    x1: this.options.width - this.options.margin,
-    y1: this.options.height - this.options.margin,
+    x: this.options.marginLeft,
+    y: this.options.marginTop,
+    x1: this.options.width - this.options.marginRight,
+    y1: this.options.height - this.options.marginBottom,
   };
 };
 
@@ -143,7 +143,11 @@ H5C.prototype.update = function() {
   // Apply the resolution to all the dimensions
   var resolution = this.resolution;
   this.options.margin *= resolution;
-  this.options.padding *= resolution;
+  this.options.marginTop *= resolution;
+  this.options.marginBottom *= resolution;
+  this.options.marginLeft *= resolution;
+  this.options.marginRight *= resolution;
+  // this.options.padding *= resolution;
   this.options.width *= resolution;
   this.options.height *= resolution;
 

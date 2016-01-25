@@ -121,6 +121,10 @@ var H5C = function(element, options, theme) {
     console.assert(
       typeof this.data.x === 'number' || Array.isArray(this.data.x) && this.data.x.length === 2,
       'data.x should be like: {x: 10} or {x: [0, 10]}');
+
+    console.assert(this.options.padding === 0, 'padding should be 0');
+
+    console.assert(this.options.marginTop && this.options.marginBottom && this.options.marginLeft && this.options.marginRight, 'you should provide margins to display ticks');
   }
 
   //Update/initlize the graph variables

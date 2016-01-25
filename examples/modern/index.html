@@ -9,6 +9,12 @@
   <link href="../../doc/style/style.css" rel="stylesheet" type="text/css" />
   <script src="../../doc/script/Sintax.js" type="text/javascript"></script>
   <script src="../../doc/script/Examples.js" type="text/javascript"></script>
+
+  <style>
+  canvas {
+    border: 1px solid #ccc;
+  }
+  </style>
 </head>
 <!-- Example checklist:
   Edited the head's title?
@@ -52,39 +58,100 @@
   </footer>
 </body>
 <!-- You edit below this line -->
-<script src="../../dist/aristochart-modern.js" type="text/javascript"></script>
+<script src="../../dist/h5c-modern.js" type="text/javascript"></script>
 <script type="text/javascript" id="example-code">
-var y = [1];
-var y1 = [1];
-var y2 = [1];
-for (var i = 0; i < 18; i++) {
-  y.push(parseFloat((0.4 * Math.random() + 1).toFixed(4), 10));
-  y1.push(parseFloat((0.4 * Math.random() + 1).toFixed(4), 10));
-  y2.push(parseFloat((0.4 * Math.random() + 0.5).toFixed(4), 10));
-}
+var DATA = [
+  {"date":"12-11","value":"-0.18%"},
+  {"date":"12-14","value":"-0.17%"},
+  {"date":"12-15","value":"-0.16%"},
+  {"date":"12-16","value":"-0.15%"},
+  {"date":"12-17","value":"-0.14%"},
+  {"date":"12-18","value":"-0.14%"},
+  {"date":"12-21","value":"-0.14%"},
+  {"date":"12-22","value":"-0.13%"},
+  {"date":"12-23","value":"-0.15%"},
+  {"date":"12-24","value":"-0.15%"},
+  {"date":"12-25","value":"-0.14%"},
+  {"date":"12-28","value":"-0.15%"},
+  {"date":"12-29","value":"-0.14%"},
+  {"date":"12-30","value":"-0.14%"},
+  {"date":"12-31","value":"-0.15%"},
+  {"date":"01-04","value":"-0.20%"},
+  {"date":"01-05","value":"-0.21%"},
+  {"date":"01-06","value":"-0.19%"},
+  {"date":"01-07","value":"-0.24%"},
+  {"date":"01-08","value":"-0.24%"},
+  {"date":"01-11","value":"-0.28%"},
+  {"date":"01-12","value":"-0.28%"},
+  {"date":"01-13","value":"-0.30%"},
+  {"date":"01-14","value":"-0.29%"},
+  {"date":"01-15","value":"-0.30%"},
+  {"date":"01-18","value":"-0.29%"},
+  {"date":"01-19","value":"-0.27%"},
+  {"date":"01-20","value":"-0.28%"},
+  {"date":"01-21","value":"-0.30%"},
+  {"date":"01-22","value":"-0.29%"}];
+
+var tick = DATA.map((a, i) => {
+  if (i === 0 || i === DATA.length -1) {
+    return '#' + a.date;
+  } else {
+    return null;
+  }
+});
+
+var y1 = DATA.map(a => parseFloat(a.value.replace('%', ''), 10));
+var y1Copy = y1.filter(() => true);
+y1Copy.sort(function (a, b) { return a - b; });
+var yMin = y1Copy[0];
+var yMax = y1Copy.slice(-1)[0];
+var yRange = yMax - yMin;
+var axisYMin = yMin - Math.abs(yRange * 0.2);
+var axisYMax = yMax + Math.abs(yRange * 0.2);
 
 var holder = document.getElementById("holder");
 var graph = new H5C(holder, {
+  marginTop: 20,
+  marginBottom: 50,
+  marginLeft: 50,
+  marginRight: 20,
+
   data: {
-    x: 19,
-    tick: [
-      '#01-12', null, null, null, null,
-      '01-17', null, null, null, null,
-      '', null, null, null, null,
-      '#', null, null, '',
-    ],
-    y: y,
-    // y1: y1,
-    // y2: y2,
+    x: tick.length,
+    tick: tick,
+    y: y1,
+  },
+
+  title: {
+    y: '涨幅 %',
   },
 
   axis: {
     y: {
-      min: 0.5,
-      max: 1.5,
+      min: axisYMin,
+      max: axisYMax,
     },
   },
-  // xLabelText: ['~01-12', '~01-14', '~01-16', '~01-18', '~01-20', '~01-22',],
+
+  style: {
+    default: {
+      label: {
+        y: {
+          suffix: '%',
+        }
+      },
+
+      title: {
+        fontSize: 12,
+        font: 'sans-serif',
+
+        y: {
+          offsetX: -40,
+          offsetY: -15,
+        },
+      },
+    },
+  },
 }, H5C.themes.modern);
 </script>
 </html>

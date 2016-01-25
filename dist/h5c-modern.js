@@ -121,6 +121,10 @@ var H5C = function(element, options, theme) {
     console.assert(
       typeof this.data.x === 'number' || Array.isArray(this.data.x) && this.data.x.length === 2,
       'data.x should be like: {x: 10} or {x: [0, 10]}');
+
+    console.assert(this.options.padding === 0, 'padding should be 0');
+
+    console.assert(this.options.marginTop && this.options.marginBottom && this.options.marginLeft && this.options.marginRight, 'you should provide margins to display ticks');
   }
 
   //Update/initlize the graph variables
@@ -179,10 +183,10 @@ H5C.themes = {};
 
 H5C.prototype.initBox = function () {
   this.box = {
-    x: this.options.margin,
-    y: this.options.margin,
-    x1: this.options.width - this.options.margin,
-    y1: this.options.height - this.options.margin,
+    x: this.options.marginLeft,
+    y: this.options.marginTop,
+    x1: this.options.width - this.options.marginRight,
+    y1: this.options.height - this.options.marginBottom,
   };
 };
 
@@ -322,7 +326,11 @@ H5C.prototype.update = function() {
   // Apply the resolution to all the dimensions
   var resolution = this.resolution;
   this.options.margin *= resolution;
-  this.options.padding *= resolution;
+  this.options.marginTop *= resolution;
+  this.options.marginBottom *= resolution;
+  this.options.marginLeft *= resolution;
+  this.options.marginRight *= resolution;
+  // this.options.padding *= resolution;
   this.options.width *= resolution;
   this.options.height *= resolution;
 
@@ -376,8 +384,17 @@ H5C.prototype.render = function() {
   // this.ctx.strokeStyle ='green'
   // this.ctx.lineWidth = 4;
   // this.ctx.beginPath();
-  // this.ctx.moveTo(0, 0);
-  // this.ctx.lineTo(200, 200);
+  // this.ctx.moveTo(this.box.x, this.box.y);
+  // this.ctx.lineTo(this.box.x + 200, this.box.y + 200);
+  // this.ctx.stroke();
+  // this.ctx.restore();
+  //
+  // this.ctx.save();
+  // this.ctx.strokeStyle ='green'
+  // this.ctx.lineWidth = 4;
+  // this.ctx.beginPath();
+  // this.ctx.moveTo(this.box.x1, this.box.y1);
+  // this.ctx.lineTo(this.box.x1 - 200, this.box.y1 - 200);
   // this.ctx.stroke();
   // this.ctx.restore();
   // // } debug
@@ -510,16 +527,28 @@ H5C.prototype.render = function() {
           var xLabel = that.options.title.x;
           var yLabel = that.options.title.y;
 
-          if (defaults.title.x.visible) {
+          var canvasXY = that._normalize(0, that.box.y1 - that.box.y);
+
+          // FIXME
+          // if (defaults.title.x.visible) {
+          //   that.options.title.render.call(
+          //     that,
+          //     defaults,
+          //     xLabel,
+          //     (that.box.x*2 + that.box.x1)/2,
+          //     that.box.y + that.box.y1,
+          //     'x');
+          // }
+
+          if (defaults.title.y.visible) {
             that.options.title.render.call(
               that,
               defaults,
-              xLabel,
-              (that.box.x*2 + that.box.x1)/2,
-              that.box.y + that.box.y1,
-              "x");
+              yLabel,
+              canvasXY[0],
+              canvasXY[1],
+              'y');
           }
-          if(defaults.title.y.visible) that.options.title.render.call(that, defaults, yLabel, (that.box.x), (that.box.y*2 + that.box.y1)/2, "y");
         }
         break;
 
@@ -566,10 +595,11 @@ H5C.line = {
     this.ctx.save();
 
     if (style.line.fillGradient) {
-      var gradient = this.ctx.createLinearGradient((this.box.x + this.box.x1) / 2, this.box.y, (this.box.x * 2 + this.box.x1) / 3, this.box.y1);
+      // var gradient = this.ctx.createLinearGradient((this.box.x + this.box.x1) / 2, this.box.y, (this.box.x * 2 + this.box.x1) / 3, this.box.y1);
+      var gradient = this.ctx.createLinearGradient((this.box.x + this.box.x1) / 2, this.box.y, (this.box.x + this.box.x1) / 2, this.box.y1);
       gradient.addColorStop(0, style.line.fillGradient[0]);
-      gradient.addColorStop(0.2, style.line.fillGradient[1]);
-      gradient.addColorStop(0.75, style.line.fillGradient[2]);
+      gradient.addColorStop(0.5, style.line.fillGradient[1]);
+      gradient.addColorStop(0.9, style.line.fillGradient[2]);
       gradient.addColorStop(1, style.line.fillGradient[3]);
       this.ctx.fillStyle = gradient;
     } else {
@@ -672,10 +702,16 @@ H5C.label = {
 
       // console.log(text);
 
-      if (text) {
-        if (text[0] === '#') {
-          text = text.substring(1);
+      if (type === 'x') {
+        if (text) {
+          if (text[0] === '#') {
+            text = text.substring(1);
+          }
+          this.ctx.fillText(text, x, y);
         }
+      } else if (type === 'y') {
+        text = text.toFixed(style.label.y.precision || 2);
+        text += style.label.y.suffix || '';
         this.ctx.fillText(text, x, y);
       }
 
@@ -697,18 +733,23 @@ H5C.label = {
 
 H5C.title = {
   text: function(style, text, x, y, type) {
+    // console.log('render.text:', style, text, x, y, type);
     this.ctx.save();
 
     if(type == "x") y += style.title.x.offsetY,
       x += style.title.x.offsetX;
-    if(type == "y") y += style.title.y.offsetY,
+
+    if (type === "y") {
+      y += style.title.y.offsetY;
       x += style.title.y.offsetX;
+    }
 
     this.ctx.font = style.title.fontStyle + " " + (style.title.fontSize*this.resolution) + "px " + style.title.font;
     this.ctx.fillStyle = style.title.color;
 
     this.ctx.translate(x, y);
-    if(type == "y") this.ctx.rotate(Math.PI/2);
+    // this.ctx.translate(300, 300);
+    // if(type == "y") this.ctx.rotate(Math.PI/2);
 
     this.ctx.fillText(text, 0, 0);
     this.ctx.restore();
@@ -724,7 +765,6 @@ H5C.title = {
 H5C.themes.modern = {
   width: 640,
   height: 400,
-  margin: 70,
   padding: 0,
   render: true,
 
@@ -792,8 +832,8 @@ H5C.themes.modern = {
         stroke: '#e64742',
         width: 2,
         fillGradient: [
-          'rgba(246, 168, 168, 1)',
           'rgba(246, 168, 168, 0.9)',
+          'rgba(246, 168, 168, 0.4)',
           'rgba(246, 168, 168, 0.1)',
           'rgba(246, 168, 168, 0)',
         ],
@@ -812,8 +852,9 @@ H5C.themes.modern = {
 
         y: {
           visible: true,
-          fixed: true
-        }
+          fixed: true,
+          suffix: null,
+        },
       },
 
       tick: {
@@ -857,7 +898,9 @@ H5C.themes.modern = {
           offsetY: 8,
           offsetX: 12,
           visible: true,
-          fixed: true
+          fixed: true,
+          precision: 2,
+          suffix: null,
         }
       },
 
@@ -865,13 +908,13 @@ H5C.themes.modern = {
         color: '#777',
         font: 'georgia',
         fontSize: '16',
-        fontStyle: 'italic',
-        visible: false,
+        fontStyle: 'normal',
+        visible: true,
 
         x: {
           offsetX: 0,
           offsetY: 120,
-          visible: true
+          visible: false
         },
 
         y: {
